@@ -14,6 +14,8 @@ import numpy as np
 import numpy.linalg as LA
 from torch.autograd import Variable
 
+from modules import MaskedConv2d, MaskedLinear
+
 
 # --------------------------------------------------
 # Spiking neuron with fast-sigmoid surrogate gradient
@@ -256,23 +258,23 @@ class SNN_VGG9_TBN(nn.Module):
         affine_flag = True
         bias_flag = False
         # Instantiate the ConvSNN layers
-        self.conv1 = nn.Conv2d(self.inp_maps, 64, kernel_size=3, stride=1, padding=1, bias=bias_flag)
+        self.conv1 = MaskedConv2d(self.inp_maps, 64, kernel_size=3, stride=1, padding=1, bias=bias_flag)
         self.bn1_list = nn.ModuleList([nn.BatchNorm2d(64, eps=1e-4, momentum=0.1, affine=affine_flag) for i in range(self.batch_num)])
-        self.conv1_1 = nn.Conv2d(64, 64, kernel_size=3, stride=1, padding=1, bias=bias_flag)
+        self.conv1_1 = MaskedConv2d(64, 64, kernel_size=3, stride=1, padding=1, bias=bias_flag)
         self.bn1_1_list = nn.ModuleList([nn.BatchNorm2d(64, eps=1e-4, momentum=0.1, affine=affine_flag) for i in range(self.batch_num)])
         self.pool1 = nn.AvgPool2d(kernel_size=2)  # Default stride = kernel_size
 
-        self.conv2 = nn.Conv2d(64, 128, kernel_size=self.ksize, stride=1, padding=1, bias=bias_flag)
+        self.conv2 = MaskedConv2d(64, 128, kernel_size=self.ksize, stride=1, padding=1, bias=bias_flag)
         self.bn2_list = nn.ModuleList([nn.BatchNorm2d(128, eps=1e-4, momentum=0.1, affine=affine_flag) for i in range(self.batch_num)])
-        self.conv3 = nn.Conv2d(128, 128, kernel_size=self.ksize, stride=1, padding=1, bias=bias_flag)
+        self.conv3 = MaskedConv2d(128, 128, kernel_size=self.ksize, stride=1, padding=1, bias=bias_flag)
         self.bn3_list = nn.ModuleList([nn.BatchNorm2d(128, eps=1e-4, momentum=0.1, affine=affine_flag) for i in range(self.batch_num)])
         self.pool2 = nn.AvgPool2d(kernel_size=2)  # Default stride = kernel_size
 
-        self.conv4 = nn.Conv2d(128, 256, kernel_size=self.ksize, stride=1, padding=1, bias=bias_flag)
+        self.conv4 = MaskedConv2d(128, 256, kernel_size=self.ksize, stride=1, padding=1, bias=bias_flag)
         self.bn4_list = nn.ModuleList([nn.BatchNorm2d(256, eps=1e-4, momentum=0.1, affine=affine_flag) for i in range(self.batch_num)])
-        self.conv5 = nn.Conv2d(256, 256, kernel_size=self.ksize, stride=1, padding=1, bias=bias_flag)
+        self.conv5 = MaskedConv2d(256, 256, kernel_size=self.ksize, stride=1, padding=1, bias=bias_flag)
         self.bn5_list = nn.ModuleList([nn.BatchNorm2d(256, eps=1e-4, momentum=0.1, affine=affine_flag) for i in range(self.batch_num)])
-        self.conv6 = nn.Conv2d(256, 256, kernel_size=self.ksize, stride=1, padding=1, bias=bias_flag)
+        self.conv6 = MaskedConv2d(256, 256, kernel_size=self.ksize, stride=1, padding=1, bias=bias_flag)
         self.bn6_list = nn.ModuleList([nn.BatchNorm2d(256, eps=1e-4, momentum=0.1, affine=affine_flag) for i in range(self.batch_num)])
         self.pool3 = nn.AvgPool2d(kernel_size=2)  # Default stride = kernel_size
 
@@ -280,10 +282,10 @@ class SNN_VGG9_TBN(nn.Module):
 
         self.drop = nn.Dropout(p=0.2)
 
-        self.fc1 = nn.Linear((self.img_size//8)*(self.img_size //8)*256, 2*2*256, bias=bias_flag)
+        self.fc1 = MaskedLinear((self.img_size//8)*(self.img_size //8)*256, 2*2*256, bias=bias_flag)
         self.bnfc_list = nn.ModuleList([nn.BatchNorm1d( 2*2*256, eps=1e-4, momentum=0.1, affine=affine_flag) for i in range(self.batch_num)])
 
-        self.fc2 = nn.Linear(2*2*256, self.num_cls, bias=bias_flag)
+        self.fc2 = MaskedLinear(2*2*256, self.num_cls, bias=bias_flag)
 
         batchnormlist = [self.bn1_list, self.bn1_1_list, self.bn2_list, self.bn3_list, self.bn4_list, self.bn5_list,
                          self.bn6_list, self.bnfc_list]
