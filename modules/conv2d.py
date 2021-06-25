@@ -50,3 +50,7 @@ class MaskedConv2d(torch.nn.Conv2d):
             self.move_data(device)
 
         return super(MaskedConv2d, self).to(*args, **kwargs)
+
+    @property
+    def num_weight(self):
+        return torch.sum(self.mask).int().item()

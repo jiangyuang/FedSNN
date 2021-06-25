@@ -289,6 +289,7 @@ class SNN_VGG9_TBN(nn.Module):
 
         batchnormlist = [self.bn1_list, self.bn1_1_list, self.bn2_list, self.bn3_list, self.bn4_list, self.bn5_list,
                          self.bn6_list, self.bnfc_list]
+        self.prunable_layers = [self.conv1, self.conv1_1, self.conv2, self.conv3, self.conv4, self.conv5, self.conv6, self.fc1, self.fc2]
 
         #TODO turn off bias of batchnorm
         for bnlist in batchnormlist:
@@ -314,6 +315,18 @@ class SNN_VGG9_TBN(nn.Module):
         # Instantiate differentiable spiking nonlinearity
         self.spike_fn = init_spike_fn(self.grad_type)
         self.spike_pool = init_spike_fn(self.grad_type_pool)
+
+    def prune_by_pct(self, pct_arg):
+        prunable_layers = self.prunable_layers
+        if isinstance(pct_arg, list) or isinstance(pct_arg, tuple):
+            assert len(prunable_layers) == len(pct_arg)
+        elif isinstance(pct_arg, float) or isinstance(pct_arg, int):
+            pct_arg = [pct_arg] * len(prunable_layers)
+        for pct, layer in zip(pct_arg, prunable_layers):
+            if pct is not None:
+                layer.prune_by_pct(pct)
+
+        return self
 
     def fc_init(self):
         torch.nn.init.xavier_uniform_(self.fc1.weight)
@@ -1066,7 +1079,7 @@ class SNN_VGG11_TBN(nn.Module):
 
 
             out_prev = out_prev.reshape(batch_size, -1)
-            
+
 
             # compute fc1
             mem_thr = (mem_fc1 / self.fc1.threshold) - 1.0

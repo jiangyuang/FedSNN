@@ -46,3 +46,7 @@ class MaskedLinear(nn.Linear):
             self.move_data(device)
 
         return super(MaskedLinear, self).to(*args, **kwargs)
+
+    @property
+    def num_weight(self) -> int:
+        return self.mask.sum().item()
