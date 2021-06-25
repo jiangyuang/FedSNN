@@ -160,7 +160,7 @@ if __name__ == '__main__':
             loss_locals.append(copy.deepcopy(loss))
         # update global weights
         w_glob = fl.FedAvg(w_locals, w_init = model_copy.state_dict())
-        
+
         w_init = net_glob.state_dict()
         delta_w_locals = []
         sum_grads = 0
@@ -174,13 +174,15 @@ if __name__ == '__main__':
 
         # copy weight to net_glob
         net_glob.load_state_dict(w_glob)
- 
+        net_glob.prune_by_pct([0.05] + [0.1] * 7 + [0.05])
+        print("Pruning 5% at input/output layer and 10% at other layers.")
+
         # print loss
         print(loss_locals)
         loss_avg = sum(loss_locals) / len(loss_locals)
         print('Round {:3d}, Average loss {:.3f}'.format(iter, loss_avg))
         loss_train_list.append(loss_avg)
- 
+
         if iter % args.eval_every == 0:
             # testing
             net_glob.eval()
@@ -196,7 +198,7 @@ if __name__ == '__main__':
                 print("Round {:d}, Training accuracy: {:.2f}".format(iter, acc_train))
                 acc_test, loss_test = test_img(net_glob, dataset_test, args)
                 print("Round {:d}, Testing accuracy: {:.2f}".format(iter, acc_test))
- 
+
             # Add metrics to store
             ms_acc_train_list.append(acc_train)
             ms_acc_test_list.append(acc_test)
