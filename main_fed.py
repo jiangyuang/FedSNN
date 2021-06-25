@@ -174,8 +174,6 @@ if __name__ == '__main__':
 
         # copy weight to net_glob
         net_glob.load_state_dict(w_glob)
-        net_glob.module.prune_by_pct([0.05] + [0.1] * 7 + [0.05])
-        print("Pruning 5% at input/output layer and 10% at other layers.")
 
         # print loss
         print(loss_locals)
@@ -206,6 +204,9 @@ if __name__ == '__main__':
             ms_loss_test_list.append(loss_test)
             ms_eva_train_list.append(eva_train)
             ms_eva_test_list.append(eva_test)
+
+        net_glob.module.prune_by_pct([0.05] + [0.1] * 7 + [0.05])
+        print("Pruning 5% at input/output layer and 10% at other layers.")
 
         if iter in lr_interval:
             args.lr = args.lr/args.lr_reduce
