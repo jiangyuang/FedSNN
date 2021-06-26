@@ -326,6 +326,10 @@ class SNN_VGG9_TBN(nn.Module):
             if pct is not None:
                 layer.prune_by_pct(pct)
 
+        print("Density after pruning")
+        for layer in self.prunable_layers:
+            print(layer, layer.num_weight/layer.mask.nelement())
+
         return self
 
     def fc_init(self):
