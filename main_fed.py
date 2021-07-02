@@ -3,6 +3,7 @@
 # Python version: 3.6
 
 import matplotlib
+
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import copy
@@ -13,7 +14,8 @@ from torchvision import datasets, transforms
 import torch
 import torch.nn as nn
 
-from utils.sampling import mnist_iid, mnist_noniid, cifar_iid, cifar_non_iid, mnist_dvs_iid, mnist_dvs_non_iid, nmnist_iid, nmnist_non_iid
+from utils.sampling import mnist_iid, mnist_noniid, cifar_iid, cifar_non_iid, mnist_dvs_iid, mnist_dvs_non_iid, \
+    nmnist_iid, nmnist_non_iid
 from utils.options import args_parser
 from models.Update import LocalUpdate
 from models.Fed import FedLearn
@@ -45,7 +47,8 @@ if __name__ == '__main__':
     h5fs = None
     # load dataset and split users
     if args.dataset == 'CIFAR10':
-        trans_cifar = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
+        trans_cifar = transforms.Compose(
+            [transforms.ToTensor(), transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
         dataset_train = datasets.CIFAR10('../data/cifar', train=True, download=True, transform=trans_cifar)
         dataset_test = datasets.CIFAR10('../data/cifar', train=False, download=True, transform=trans_cifar)
         if args.iid:
@@ -53,7 +56,8 @@ if __name__ == '__main__':
         else:
             dict_users = cifar_non_iid(dataset_train, args.num_classes, args.num_users)
     elif args.dataset == 'CIFAR100':
-        trans_cifar = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
+        trans_cifar = transforms.Compose(
+            [transforms.ToTensor(), transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
         dataset_train = datasets.CIFAR100('../data/cifar100', train=True, download=True, transform=trans_cifar)
         dataset_test = datasets.CIFAR100('../data/cifar100', train=False, download=True, transform=trans_cifar)
         if args.iid:
@@ -82,7 +86,8 @@ if __name__ == '__main__':
                 model_args = {'num_cls': args.num_classes, 'timesteps': 20}
             net_glob = snn_models_bntt.SNN_VGG9_TBN(**model_args).cuda()
         else:
-            model_args = {'vgg_name': args.model, 'labels': args.num_classes, 'dataset': args.dataset, 'kernel_size': 3, 'dropout': args.dropout}
+            model_args = {'vgg_name': args.model, 'labels': args.num_classes, 'dataset': args.dataset, 'kernel_size': 3,
+                          'dropout': args.dropout}
             net_glob = ann_models.VGG(**model_args).cuda()
     elif args.model[0:6].lower() == 'resnet':
         if args.snn:
@@ -108,7 +113,7 @@ if __name__ == '__main__':
     val_acc_list, net_list = [], []
 
     # metrics to store
-    ms_acc_train_list, ms_loss_train_list,  ms_eva_train_list = [], [], []
+    ms_acc_train_list, ms_loss_train_list, ms_eva_train_list = [], [], []
     ms_acc_test_list, ms_loss_test_list, ms_eva_test_list = [], [], []
     ms_num_client_list, ms_tot_comm_cost_list, ms_avg_comm_cost_list, ms_max_comm_cost_list = [], [], [], []
     ms_tot_nz_grad_list, ms_avg_nz_grad_list, ms_max_nz_grad_list = [], [], []
@@ -136,7 +141,7 @@ if __name__ == '__main__':
     values = args.lr_interval.split()
     lr_interval = []
     for value in values:
-        lr_interval.append(int(float(value)*args.epochs))
+        lr_interval.append(int(float(value) * args.epochs))
 
     # Define Fed Learn object
     fl = FedLearn(args)
@@ -149,17 +154,19 @@ if __name__ == '__main__':
         print(idxs_users)
         for idx in idxs_users:
             if args.dataset == "DDD20":
-                local = LocalUpdateDDD(args = args, dataset_keys = dataset_keys, h5fs = h5fs, client_id=idx) # Takes in the client id and the dataloader later decides what data to assign this client
+                local = LocalUpdateDDD(args=args, dataset_keys=dataset_keys, h5fs=h5fs,
+                                       client_id=idx)  # Takes in the client id and the dataloader later decides what data to assign this client
             else:
-                local = LocalUpdate(args=args, dataset=dataset_train, idxs=dict_users[idx]) # idxs needs the list of indices assigned to this particular client
-            model_copy = type(net_glob.module)(**model_args) # get a new instance
+                local = LocalUpdate(args=args, dataset=dataset_train, idxs=dict_users[
+                    idx])  # idxs needs the list of indices assigned to this particular client
+            model_copy = type(net_glob.module)(**model_args)  # get a new instance
             model_copy = nn.DataParallel(model_copy)
-            model_copy.load_state_dict(net_glob.state_dict()) # copy weights and stuff
+            model_copy.load_state_dict(net_glob.state_dict())  # copy weights and stuff
             w, loss = local.train(net=model_copy.to(args.device))
             w_locals.append(copy.deepcopy(w))
             loss_locals.append(copy.deepcopy(loss))
         # update global weights
-        w_glob = fl.FedAvg(w_locals, w_init = model_copy.state_dict())
+        w_glob = fl.FedAvg(w_locals, w_init=model_copy.state_dict())
 
         w_init = net_glob.state_dict()
         delta_w_locals = []
@@ -205,18 +212,21 @@ if __name__ == '__main__':
             ms_eva_train_list.append(eva_train)
             ms_eva_test_list.append(eva_test)
 
-        net_glob.module.prune_by_pct([0.05, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.05])
+        prune_rates = [0.05, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.05]
+        net_glob.module.prune_by_pct([x / 10 for x in prune_rates])
         print("Pruning 5% at input/output layer and 10% at other layers.")
 
         if iter in lr_interval:
-            args.lr = args.lr/args.lr_reduce
+            args.lr = args.lr / args.lr_reduce
 
     Path('./{}'.format(args.result_dir)).mkdir(parents=True, exist_ok=True)
     # plot loss curve
     plt.figure()
     plt.plot(range(len(loss_train_list)), loss_train_list)
     plt.ylabel('train_loss')
-    plt.savefig('./{}/fed_loss_{}_{}_{}_C{}_iid{}.png'.format(args.result_dir,args.dataset, args.model, args.epochs, args.frac, args.iid))
+    plt.savefig(
+        './{}/fed_loss_{}_{}_{}_C{}_iid{}.png'.format(args.result_dir, args.dataset, args.model, args.epochs, args.frac,
+                                                      args.iid))
 
     # testing
     net_glob.eval()
@@ -249,7 +259,9 @@ if __name__ == '__main__':
     plt.plot()
     plt.ylabel('Accuracy')
     plt.legend(['Training acc', 'Testing acc'])
-    plt.savefig('./{}/fed_acc_{}_{}_{}_C{}_iid{}.png'.format(args.result_dir, args.dataset, args.model, args.epochs, args.frac, args.iid))
+    plt.savefig(
+        './{}/fed_acc_{}_{}_{}_C{}_iid{}.png'.format(args.result_dir, args.dataset, args.model, args.epochs, args.frac,
+                                                     args.iid))
 
     plt.figure()
     plt.plot(range(len(ms_eva_train_list)), ms_eva_train_list)
@@ -257,14 +269,16 @@ if __name__ == '__main__':
     plt.plot()
     plt.ylabel('EVA')
     plt.legend(['Training EVA', 'Testing EVA'])
-    plt.savefig('./{}/fed_eva_{}_{}_{}_C{}_iid{}.png'.format(args.result_dir, args.dataset, args.model, args.epochs, args.frac, args.iid))
+    plt.savefig(
+        './{}/fed_eva_{}_{}_{}_C{}_iid{}.png'.format(args.result_dir, args.dataset, args.model, args.epochs, args.frac,
+                                                     args.iid))
 
     # plot gradients curve
     plt.figure()
     plt.plot(range(len(ms_sum_grads[1:-1])), ms_sum_grads[1:-1])
     plt.ylabel('grads')
-    plt.savefig('./{}/fed_grads_{}_{}_{}_C{}_iid{}.png'.format(args.result_dir,args.dataset, args.model, args.epochs, args.frac, args.iid))
-
+    plt.savefig('./{}/fed_grads_{}_{}_{}_C{}_iid{}.png'.format(args.result_dir, args.dataset, args.model, args.epochs,
+                                                               args.frac, args.iid))
 
     # Write metric store into a CSV
     metrics_df = pd.DataFrame(
@@ -277,6 +291,8 @@ if __name__ == '__main__':
             'Train eva': ms_eva_train_list,
             'Test eva': ms_eva_test_list
         })
-    metrics_df.to_csv('./{}/fed_stats_{}_{}_{}_C{}_iid{}.csv'.format(args.result_dir, args.dataset, args.model, args.epochs, args.frac, args.iid), sep='\t')
+    metrics_df.to_csv(
+        './{}/fed_stats_{}_{}_{}_C{}_iid{}.csv'.format(args.result_dir, args.dataset, args.model, args.epochs,
+                                                       args.frac, args.iid), sep='\t')
 
     torch.save(net_glob.module.state_dict(), './{}/saved_model'.format(args.result_dir))
