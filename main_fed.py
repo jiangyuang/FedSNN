@@ -212,9 +212,10 @@ if __name__ == '__main__':
             ms_eva_train_list.append(eva_train)
             ms_eva_test_list.append(eva_test)
 
-        prune_rates = [0.05, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.05]
-        net_glob.module.prune_by_pct([x / 10 for x in prune_rates])
-        print("Pruning 5% at input/output layer and 10% at other layers.")
+        if args.prune:
+            prune_rates = [0.05, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.05]
+            net_glob.module.prune_by_pct([x / 10 for x in prune_rates])
+            print(f"Pruning {prune_rates[0]} at input/output layer and {prune_rates[1]} at other layers.")
 
         if iter in lr_interval:
             args.lr = args.lr / args.lr_reduce

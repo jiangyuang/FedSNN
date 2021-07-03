@@ -60,5 +60,7 @@ def args_parser():
     parser.add_argument('--grad_noise_stdev', type=float, default=0.0, help="Noise level for gradients")
     parser.add_argument('--dvs', action='store_true', help="Whether the input data is DVS")
     parser.add_argument('--modality', type=str, default='aps', help="aps or dvs for the type of data to work on DDD20")
+
+    parser.add_argument('--prune', action='store_true', default=False, help='whether to use pruning or not')
     args = parser.parse_args()
     return args
