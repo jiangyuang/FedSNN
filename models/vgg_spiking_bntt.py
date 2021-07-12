@@ -340,7 +340,6 @@ class SNN_VGG9_TBN(nn.Module):
 
     def forward(self, inp):
 
-        print(inp.device)
 
         # avg_spike_time = []
         # Initialize the neuronal membrane potentials and dropout masks
@@ -388,6 +387,7 @@ class SNN_VGG9_TBN(nn.Module):
             rst[mem_thr>0] = self.conv1.threshold
             mem_conv1 = (self.leak_mem*mem_conv1 + self.bn1_list[int(t/self.one_stamp)](self.conv1(spike_inp)) -rst)
             out_prev  = out.clone()
+            print(1)
 
 
             # Compute the conv1_1 outputs
