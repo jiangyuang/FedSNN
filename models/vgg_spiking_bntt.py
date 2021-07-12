@@ -360,6 +360,8 @@ class SNN_VGG9_TBN(nn.Module):
         print(self.conv5.weight.size(), mem_conv5.size())
         print(self.conv6.weight.size(), mem_conv6.size())
 
+        print(self.conv1.weight.device)
+
 
 
         mem_fc1 = torch.zeros(batch_size, 1024).cuda()
@@ -381,19 +383,12 @@ class SNN_VGG9_TBN(nn.Module):
             # out_prev = spike_inp
             #
             # Compute the conv1 outputs
-            print(1, spike_inp.device)
             mem_thr   = (mem_conv1/self.conv1.threshold) - 1.0
-            print(2)
             out       = self.spike_fn(mem_thr)
-            print(3)
             rst       = torch.zeros_like(mem_conv1).cuda()
-            print(4)
             rst[mem_thr>0] = self.conv1.threshold
-            print(5)
             mem_conv1 = (self.leak_mem*mem_conv1 + self.bn1_list[int(t/self.one_stamp)](self.conv1(spike_inp)) -rst)
-            print(7)
             out_prev  = out.clone()
-            print(8)
 
 
             # Compute the conv1_1 outputs
