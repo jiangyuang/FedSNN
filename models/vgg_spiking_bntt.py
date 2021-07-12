@@ -381,7 +381,7 @@ class SNN_VGG9_TBN(nn.Module):
             # out_prev = spike_inp
             #
             # Compute the conv1 outputs
-            print(1)
+            print(1, spike_inp.device)
             mem_thr   = (mem_conv1/self.conv1.threshold) - 1.0
             print(2)
             out       = self.spike_fn(mem_thr)
