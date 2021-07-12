@@ -10,7 +10,7 @@ class MaskedConv2d(torch.nn.Conv2d):
                  padding_mode: str = 'zeros'):
         super(MaskedConv2d, self).__init__(in_channels, out_channels, kernel_size, stride, padding,
                                            dilation, groups, bias, padding_mode)
-        self.mask = torch.ones_like(self.weight, dtype=torch.bool)
+        self.mask = torch.ones_like(self.weight, dtype=torch.bool).cuda()
 
     def forward(self, inp):
         return self._conv_forward(inp, self.weight * self.mask)

@@ -8,7 +8,7 @@ __all__ = ["MaskedLinear"]
 class MaskedLinear(nn.Linear):
     def __init__(self, in_features: int, out_features: int, bias: bool = True) -> None:
         super(MaskedLinear, self).__init__(in_features, out_features, bias)
-        self.mask = torch.ones_like(self.weight, dtype=torch.bool)
+        self.mask = torch.ones_like(self.weight, dtype=torch.bool).cuda()
 
     def forward(self, input: torch.Tensor) -> torch.Tensor:
         return F.linear(input, self.weight * self.mask, self.bias)

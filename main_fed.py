@@ -97,7 +97,6 @@ if __name__ == '__main__':
             net_glob = resnet_models.Network(**model_args).cuda()
     else:
         exit('Error: unrecognized model')
-    net_glob = net_glob.to(args.device)
     print(net_glob)
 
     # copy weights
