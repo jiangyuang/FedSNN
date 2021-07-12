@@ -13,7 +13,7 @@ class MaskedConv2d(torch.nn.Conv2d):
         self.mask = torch.ones_like(self.weight, dtype=torch.bool).cuda()
 
     def forward(self, inp):
-        return self._conv_forward(inp, self.weight * self.mask)
+        return self._conv_forward(inp, self.weight * self.mask, self.bias)
 
     def prune_by_threshold(self, thr):
         self.mask *= (torch.abs(self.weight) >= thr)
