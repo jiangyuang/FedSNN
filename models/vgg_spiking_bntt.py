@@ -393,6 +393,7 @@ class SNN_VGG9_TBN(nn.Module):
             mem_thr = (mem_conv1_1 / self.conv1_1.threshold) - 1.0
             out = self.spike_fn(mem_thr)
             rst = torch.zeros_like(mem_conv1_1).cuda()
+            print(1)
             rst[mem_thr > 0] = self.conv1_1.threshold
             print(self.leak_mem, mem_conv1_1.device, next(self.bn1_1_list[int(t / self.one_stamp)].parameters()).device)
             print(self.conv1_1(out_prev).device, rst.device)
