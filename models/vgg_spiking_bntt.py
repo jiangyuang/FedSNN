@@ -353,6 +353,14 @@ class SNN_VGG9_TBN(nn.Module):
         mem_conv5 = torch.zeros(batch_size, 256, self.img_size//4, self.img_size//4).cuda()
         mem_conv6 = torch.zeros(batch_size, 256, self.img_size//4, self.img_size//4).cuda()
 
+        print(self.conv1.weight.size(), mem_conv1.size())
+        print(self.conv1_1.weight.size(), mem_conv1_1.size())
+        print(self.conv2.weight.size(), mem_conv2.size())
+        print(self.conv3.weight.size(), mem_conv3.size())
+        print(self.conv4.weight.size(), mem_conv4.size())
+        print(self.conv5.weight.size(), mem_conv5.size())
+        print(self.conv6.weight.size(), mem_conv6.size())
+
 
 
         mem_fc1 = torch.zeros(batch_size, 1024).cuda()
