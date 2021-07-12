@@ -340,7 +340,7 @@ class SNN_VGG9_TBN(nn.Module):
 
     def forward(self, inp):
 
-        print(inp.device())
+        print(inp.device)
 
         # avg_spike_time = []
         # Initialize the neuronal membrane potentials and dropout masks
