@@ -51,10 +51,6 @@ class MaskedConv2d(torch.nn.Conv2d):
 
         return super(MaskedConv2d, self).to(*args, **kwargs)
 
-    def cuda(self, device=None):
-        print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-        self.to(device if device is not None else "cuda:0")
-
     @property
     def num_weight(self):
         return torch.sum(self.mask).int().item()
