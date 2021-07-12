@@ -47,6 +47,9 @@ class MaskedLinear(nn.Linear):
 
         return super(MaskedLinear, self).to(*args, **kwargs)
 
+    def cuda(self, device=None):
+        self.to(device if device is not None else "cuda:0")
+
     @property
     def num_weight(self) -> int:
         return self.mask.sum().item()
