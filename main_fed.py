@@ -158,7 +158,6 @@ if __name__ == '__main__':
         m = max(int(args.frac * args.num_users), 1)
         idxs_users = np.random.choice(range(args.num_users), m, replace=False)
         print(idxs_users)
-        print(f"Iteration: {iter}")
         for idx in idxs_users:
             print(f"Idx user: {idx}")
             if args.dataset == "DDD20":
