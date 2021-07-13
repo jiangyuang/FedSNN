@@ -4,6 +4,7 @@
 
 import argparse
 
+
 def args_parser():
     parser = argparse.ArgumentParser()
     # federated arguments
@@ -14,18 +15,23 @@ def args_parser():
     parser.add_argument('--local_bs', type=int, default=16, help="local batch size: B")
     parser.add_argument('--bs', type=int, default=16, help="test batch size")
     parser.add_argument('--lr', type=float, default=1e-4, help="learning rate")
-    parser.add_argument('--lr_interval', default='0.60 0.80 0.90', type=str, help='intervals at which to reduce lr, expressed as %%age of total epochs')
+    parser.add_argument('--lr_interval', default='0.60 0.80 0.90', type=str,
+                        help='intervals at which to reduce lr, expressed as %%age of total epochs')
 
     parser.add_argument('--lr_reduce', default=5, type=int, help='reduction factor for learning rate')
     parser.add_argument('--timesteps', default=50, type=int, help='simulation timesteps')
     parser.add_argument('--leak', default=1.0, type=float, help='membrane leak')
-    parser.add_argument('--scaling_factor', default=0.7, type=float, help='scaling factor for thresholds at reduced timesteps')
-    parser.add_argument('--default_threshold', default=1.0, type=float, help='intial threshold to train SNN from scratch')
-    parser.add_argument('--activation', default='Linear', type=str, help='SNN activation function', choices=['Linear', 'STDB'])
+    parser.add_argument('--scaling_factor', default=0.7, type=float,
+                        help='scaling factor for thresholds at reduced timesteps')
+    parser.add_argument('--default_threshold', default=1.0, type=float,
+                        help='intial threshold to train SNN from scratch')
+    parser.add_argument('--activation', default='Linear', type=str, help='SNN activation function',
+                        choices=['Linear', 'STDB'])
     parser.add_argument('--alpha', default=0.3, type=float, help='parameter alpha for STDB')
     parser.add_argument('--beta', default=0.01, type=float, help='parameter beta for STDB')
     parser.add_argument('--snn_kernel_size', default=3, type=int, help='filter size for the conv layers')
-    parser.add_argument('--optimizer', default='Adam', type=str, help='optimizer for SNN backpropagation', choices=['SGD', 'Adam'])
+    parser.add_argument('--optimizer', default='Adam', type=str, help='optimizer for SNN backpropagation',
+                        choices=['SGD', 'Adam'])
     parser.add_argument('--weight_decay', default=5e-4, type=float, help='weight decay parameter for the optimizer')
     parser.add_argument('--dropout', default=0.3, type=float, help='dropout percentage for conv layers')
 
@@ -55,12 +61,15 @@ def args_parser():
     parser.add_argument('--pretrained_model', type=str, default=None, help="Path for the pre-trained mode if any")
     parser.add_argument('--result_dir', type=str, default="results", help="Directory to store results")
     parser.add_argument('--snn', action='store_true', help="Whether to train SNN or ANN")
-    parser.add_argument('--train_acc_batches', default=200, type=int, help='print training progress after this many batches')
+    parser.add_argument('--train_acc_batches', default=200, type=int,
+                        help='print training progress after this many batches')
     parser.add_argument('--straggler_prob', type=float, default=0.0, help="straggler probability")
     parser.add_argument('--grad_noise_stdev', type=float, default=0.0, help="Noise level for gradients")
     parser.add_argument('--dvs', action='store_true', help="Whether the input data is DVS")
     parser.add_argument('--modality', type=str, default='aps', help="aps or dvs for the type of data to work on DDD20")
 
-    parser.add_argument('--prune', action='store_true', default=False, help='whether to use pruning or not')
+    parser.add_argument('--prune', action='store_true', default=False, help='whether to use pruning')
+    parser.add_argument('--initial_prune', action='store_true', default=False,
+                        help='whether to use pruning at initialization')
     args = parser.parse_args()
     return args
