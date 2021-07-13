@@ -159,7 +159,7 @@ if __name__ == '__main__':
         idxs_users = np.random.choice(range(args.num_users), m, replace=False)
         print(idxs_users)
         for idx in idxs_users:
-            print(f"Idx user: {idx}")
+            print(f"Idx user: {idx}/{len(idxs_users)}")
             if args.dataset == "DDD20":
                 local = LocalUpdateDDD(args=args, dataset_keys=dataset_keys, h5fs=h5fs,
                                        client_id=idx)  # Takes in the client id and the dataloader later decides what data to assign this client
