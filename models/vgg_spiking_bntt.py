@@ -360,7 +360,6 @@ class SNN_VGG9_TBN(nn.Module):
         fc_dropout_mask = self.drop(torch.ones([batch_size, 1024]).cuda())
 
         for t in range(self.num_steps):
-            print(t, self.num_steps)
             if self.dvs:
                 # print(inp)
                 # print(inp.shape)
