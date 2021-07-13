@@ -45,6 +45,7 @@ class LocalUpdate(object):
             print(iter, self.args.local_ep)
             batch_loss = []
             for batch_idx, (images, labels) in enumerate(self.ldr_train):
+                print(batch_idx)
                 images, labels = images.to(self.args.device), labels.to(self.args.device)
                 net.zero_grad()
                 log_probs = net(images)
