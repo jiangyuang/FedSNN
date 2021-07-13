@@ -146,18 +146,21 @@ if __name__ == '__main__':
     # Define Fed Learn object
     fl = FedLearn(args)
 
+    if args.initial_prune:
+        prune_rates = [0.05, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.05]
+        net_glob.module.prune_by_pct(prune_rates)
+        print(f"Pruning (at initialization) {prune_rates[0]} at input/output layer and {prune_rates[1]} "
+              f"at other layers.")
+
     for iter in range(args.epochs):
         net_glob.train()
-        if args.initial_prune:
-            prune_rates = [0.05, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.05]
-            net_glob.module.prune_by_pct(prune_rates)
-            print(f"Pruning (at initialization) {prune_rates[0]} at input/output layer and {prune_rates[1]} "
-                  f"at other layers.")
         w_locals, loss_locals = [], []
         m = max(int(args.frac * args.num_users), 1)
         idxs_users = np.random.choice(range(args.num_users), m, replace=False)
         print(idxs_users)
+        print(f"Iteration: {iter}")
         for idx in idxs_users:
+            print(f"Idx user: {idx}")
             if args.dataset == "DDD20":
                 local = LocalUpdateDDD(args=args, dataset_keys=dataset_keys, h5fs=h5fs,
                                        client_id=idx)  # Takes in the client id and the dataloader later decides what data to assign this client
