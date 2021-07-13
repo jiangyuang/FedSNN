@@ -352,14 +352,6 @@ class SNN_VGG9_TBN(nn.Module):
         mem_conv5 = torch.zeros(batch_size, 256, self.img_size//4, self.img_size//4).cuda()
         mem_conv6 = torch.zeros(batch_size, 256, self.img_size//4, self.img_size//4).cuda()
 
-        print(self.conv1.weight.size(), mem_conv1.size())
-        print(self.conv1_1.weight.size(), mem_conv1_1.size())
-        print(self.conv2.weight.size(), mem_conv2.size())
-        print(self.conv3.weight.size(), mem_conv3.size())
-        print(self.conv4.weight.size(), mem_conv4.size())
-        print(self.conv5.weight.size(), mem_conv5.size())
-        print(self.conv6.weight.size(), mem_conv6.size())
-
 
 
         mem_fc1 = torch.zeros(batch_size, 1024).cuda()
@@ -387,7 +379,6 @@ class SNN_VGG9_TBN(nn.Module):
             rst[mem_thr>0] = self.conv1.threshold
             mem_conv1 = (self.leak_mem*mem_conv1 + self.bn1_list[int(t/self.one_stamp)](self.conv1(spike_inp)) -rst)
             out_prev  = out.clone()
-            print(out.size())
 
 
             # Compute the conv1_1 outputs
@@ -397,13 +388,12 @@ class SNN_VGG9_TBN(nn.Module):
             rst[mem_thr > 0] = self.conv1_1.threshold
             mem_conv1_1 = (self.leak_mem * mem_conv1_1 + self.bn1_1_list[int(t/self.one_stamp)](self.conv1_1(out_prev)) - rst)
             out_prev = out.clone()
-            print(out.size())
 
 
             # Compute the avgpool1 outputs
             out =  self.pool1(out_prev)
             out_prev = out.clone()
-            print(out.size())
+
             # mem_thr = (mem_pool1 / self.pool1.threshold) - 1.0
             # out = self.spike_pool(mem_thr)
             # rst = torch.zeros_like(mem_pool1).cuda()
@@ -420,7 +410,7 @@ class SNN_VGG9_TBN(nn.Module):
             rst[mem_thr>0] = self.conv2.threshold
             mem_conv2 = (self.leak_mem*mem_conv2 + self.bn2_list[int(t/self.one_stamp)](self.conv2(out_prev)) -rst)
             out_prev  = out.clone()
-            print(out.size())
+
             # Compute the conv3 outputs
             mem_thr = (mem_conv3 / self.conv3.threshold) - 1.0
             out = self.spike_fn(mem_thr)
@@ -428,7 +418,7 @@ class SNN_VGG9_TBN(nn.Module):
             rst[mem_thr > 0] = self.conv3.threshold
             mem_conv3 = (self.leak_mem * mem_conv3 + self.bn3_list[int(t/self.one_stamp)](self.conv3(out_prev)) - rst)
             out_prev = out.clone()
-            print(out.size())
+
             # Compute the avgpool2 outputs
             out = self.pool2(out_prev)
             out_prev = out.clone()
@@ -438,7 +428,7 @@ class SNN_VGG9_TBN(nn.Module):
             # rst[mem_thr > 0] = self.pool2.threshold
             # mem_pool2 = mem_pool2 + self.pool2(out_prev) - rst
             # out_prev = out.clone()
-            print(out.size())
+
             # Compute the conv4 outputs
             mem_thr = (mem_conv4 / self.conv4.threshold) - 1.0
             out = self.spike_fn(mem_thr)
@@ -446,7 +436,7 @@ class SNN_VGG9_TBN(nn.Module):
             rst[mem_thr > 0] = self.conv4.threshold
             mem_conv4 = (self.leak_mem * mem_conv4 + self.bn4_list[int(t/self.one_stamp)](self.conv4(out_prev)) - rst)
             out_prev = out.clone()
-            print(out.size())
+
             # Compute the conv5 outputs
             mem_thr = (mem_conv5 / self.conv5.threshold) - 1.0
             out = self.spike_fn(mem_thr)
@@ -454,7 +444,7 @@ class SNN_VGG9_TBN(nn.Module):
             rst[mem_thr > 0] = self.conv5.threshold
             mem_conv5 = (self.leak_mem * mem_conv5 + self.bn5_list[int(t/self.one_stamp)](self.conv5(out_prev)) - rst)
             out_prev = out.clone()
-            print(out.size())
+
             # Compute the conv6 outputs
             mem_thr = (mem_conv6 / self.conv6.threshold) - 1.0
             out = self.spike_fn(mem_thr)
@@ -462,7 +452,7 @@ class SNN_VGG9_TBN(nn.Module):
             rst[mem_thr > 0] = self.conv6.threshold
             mem_conv6 = (self.leak_mem * mem_conv6 + self.bn6_list[int(t/self.one_stamp)](self.conv6(out_prev)) - rst)
             out_prev = out.clone()
-            print(out.size())
+
             # Compute the avgpool3 outputs
             out = self.pool3(out_prev)
             out_prev = out.clone()
@@ -472,7 +462,7 @@ class SNN_VGG9_TBN(nn.Module):
             # rst[mem_thr > 0] = self.pool3.threshold
             # mem_pool3 = mem_pool3 + self.pool3(out_prev) - rst
             # out_prev = out.clone()
-            print(out.size())
+
             out_prev = out_prev.reshape(batch_size, -1)
             # compute fc1
             mem_thr = (mem_fc1 / self.fc1.threshold) - 1.0
@@ -483,7 +473,7 @@ class SNN_VGG9_TBN(nn.Module):
             # mem_fc1 = (self.leak_mem * mem_fc1 + (self.fc1(out_prev)) - rst)
 
             out_prev = out.clone()
-            print(out.size())
+
             # out_prev = fc_dropout_mask *out_prev
 
             # # TODO last spike expectation
