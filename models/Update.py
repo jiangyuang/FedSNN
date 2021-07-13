@@ -11,6 +11,8 @@ from sklearn import metrics
 import sys
 import os
 
+from timeit import default_timer as timer
+
 
 class DatasetSplit(Dataset):
     def __init__(self, dataset, idxs):
@@ -41,8 +43,10 @@ class LocalUpdate(object):
             print("Invalid optimizer")
 
         epoch_loss = []
+
+        start =timer()
         for iter in range(self.args.local_ep):
-            print(f"local_iter: {iter}, local ep: {self.args.local_ep}")
+            print(f"local_iter: {iter}, local ep: {self.args.local_ep}, time: {timer() - start}")
             batch_loss = []
             for batch_idx, (images, labels) in enumerate(self.ldr_train):
                 images, labels = images.to(self.args.device), labels.to(self.args.device)
