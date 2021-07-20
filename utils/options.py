@@ -62,5 +62,6 @@ def args_parser():
     parser.add_argument('--modality', type=str, default='aps', help="aps or dvs for the type of data to work on DDD20")
 
     parser.add_argument('--prune', action='store_true', default=False, help='whether to use pruning or not')
+    parser.add_argument('--initial-prune', action='store_true', default=False,help='whether to do initial pruning')
     args = parser.parse_args()
     return args
