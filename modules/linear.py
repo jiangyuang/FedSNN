@@ -30,7 +30,7 @@ class MaskedLinear(nn.Linear):
 
     def random_prune_by_pct(self, pct):
         prune_idx = int(self.num_weight * pct)
-        rand = torch.rand(size=self.mask.size(), device=self.mask.device)
+        rand = torch.rand(size=self.mask.size(), device=self.mask.device, dtype=torch.float)
         rand_val = rand[self.mask == 1]
         sorted_abs_rand = rand_val.sort()[0]
         thr = sorted_abs_rand[prune_idx]

@@ -34,7 +34,7 @@ class MaskedConv2d(torch.nn.Conv2d):
 
     def random_prune_by_pct(self, pct):
         prune_idx = int(self.num_weight * pct)
-        rand = torch.rand_like(self.mask, device=self.mask.device)
+        rand = torch.rand_like(self.mask, device=self.mask.device, dtype=torch.float)
         rand_val = rand[self.mask == 1]
         sorted_abs_rand = torch.sort(rand_val)[0]
         thr = sorted_abs_rand[prune_idx]
