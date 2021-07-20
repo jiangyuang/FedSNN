@@ -147,7 +147,8 @@ if __name__ == '__main__':
     fl = FedLearn(args)
 
     if args.initial_prune is not None:
-        prune_rates = [0.05, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.05]
+        # prune_rates = [0.05, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.05]
+        prune_rates = [None, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, None]
         if args.initial_prune == "frac":
             net_glob.module.prune_by_pct(prune_rates)
         elif args.initial_prune == "random":
