@@ -155,7 +155,7 @@ if __name__ == '__main__':
         else:
             raise RuntimeError(f"{args.initial_prune} not supported")
         print(f"Pruning (at initialization) {prune_rates[0]} at input/output layer and {prune_rates[1]} "
-              f"at other layers.")
+              f"at other layers. Method = {args.initial_prune}")
 
     for iter in range(args.epochs):
         net_glob.train()
