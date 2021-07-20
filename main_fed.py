@@ -148,7 +148,8 @@ if __name__ == '__main__':
 
     if args.initial_prune:
         prune_rates = [0.05, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.05]
-        net_glob.module.prune_by_pct(prune_rates)
+        # net_glob.module.prune_by_pct(prune_rates)
+        net_glob.module.random_prune_by_pct(prune_rates)
         print(f"Pruning (at initialization) {prune_rates[0]} at input/output layer and {prune_rates[1]} "
               f"at other layers.")
 
@@ -217,6 +218,11 @@ if __name__ == '__main__':
             ms_loss_test_list.append(loss_test)
             ms_eva_train_list.append(eva_train)
             ms_eva_test_list.append(eva_test)
+
+            print("Train accuracy", ms_acc_train_list)
+            print("Test accuracy", ms_acc_test_list)
+            print("Train loss", ms_loss_train_list)
+            print("Test loss", ms_loss_test_list)
 
         if args.prune:
             prune_rates = [0.05, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.05]
