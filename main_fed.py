@@ -146,10 +146,14 @@ if __name__ == '__main__':
     # Define Fed Learn object
     fl = FedLearn(args)
 
-    if args.initial_prune:
+    if args.initial_prune is not None:
         prune_rates = [0.05, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.05]
-        # net_glob.module.prune_by_pct(prune_rates)
-        net_glob.module.random_prune_by_pct(prune_rates)
+        if args.initial_prune == "frac":
+            net_glob.module.prune_by_pct(prune_rates)
+        elif args.initial_prune == "random":
+            net_glob.module.random_prune_by_pct(prune_rates)
+        else:
+            raise RuntimeError(f"{args.initial_prune} not supported")
         print(f"Pruning (at initialization) {prune_rates[0]} at input/output layer and {prune_rates[1]} "
               f"at other layers.")
 
