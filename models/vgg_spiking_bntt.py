@@ -332,6 +332,22 @@ class SNN_VGG9_TBN(nn.Module):
 
         return self
 
+    def random_prune_by_pct(self, pct_arg):
+        prunable_layers = self.prunable_layers
+        if isinstance(pct_arg, list) or isinstance(pct_arg, tuple):
+            assert len(prunable_layers) == len(pct_arg)
+        elif isinstance(pct_arg, float) or isinstance(pct_arg, int):
+            pct_arg = [pct_arg] * len(prunable_layers)
+        for pct, layer in zip(pct_arg, prunable_layers):
+            if pct is not None:
+                layer.random_prune_by_pct(pct)
+
+        print("Density after pruning")
+        for layer in self.prunable_layers:
+            print(layer, layer.num_weight / layer.mask.nelement())
+
+        return self
+
     def fc_init(self):
         torch.nn.init.xavier_uniform_(self.fc1.weight)
 
