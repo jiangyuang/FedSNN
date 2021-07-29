@@ -561,54 +561,57 @@ class SNN_VGG16_TBN(nn.Module):
 
         affine_flag = True
 
-
         # Instantiate the ConvSNN layers
-        self.conv1 = nn.Conv2d(3, 64, kernel_size=3, stride=1, padding=1, bias=False)
+        self.conv1 = MaskedConv2d(3, 64, kernel_size=3, stride=1, padding=1, bias=False)
         self.bn1_list = nn.ModuleList([nn.BatchNorm2d(64, eps=1e-4, momentum=0.1, affine=affine_flag) for i in range(self.batch_num)])
-        self.conv1_1 = nn.Conv2d(64, 64, kernel_size=3, stride=1, padding=1, bias=False)
+        self.conv1_1 = MaskedConv2d(64, 64, kernel_size=3, stride=1, padding=1, bias=False)
         self.bn1_1_list = nn.ModuleList([nn.BatchNorm2d(64, eps=1e-4, momentum=0.1, affine=affine_flag) for i in range(self.batch_num)])
         self.pool1 = nn.AvgPool2d(kernel_size=2)  # Default stride = kernel_size
 
-        self.conv2 = nn.Conv2d(64, 128, kernel_size=self.ksize, stride=1, padding=1, bias=False)
+        self.conv2 = MaskedConv2d(64, 128, kernel_size=self.ksize, stride=1, padding=1, bias=False)
         self.bn2_list = nn.ModuleList([nn.BatchNorm2d(128, eps=1e-4, momentum=0.1, affine=affine_flag) for i in range(self.batch_num)])
-        self.conv3 = nn.Conv2d(128, 128, kernel_size=self.ksize, stride=1, padding=1, bias=False)
+        self.conv3 = MaskedConv2d(128, 128, kernel_size=self.ksize, stride=1, padding=1, bias=False)
         self.bn3_list = nn.ModuleList([nn.BatchNorm2d(128, eps=1e-4, momentum=0.1, affine=affine_flag) for i in range(self.batch_num)])
         self.pool2 = nn.AvgPool2d(kernel_size=2)  # Default stride = kernel_size
 
-        self.conv4 = nn.Conv2d(128, 256, kernel_size=self.ksize, stride=1, padding=1, bias=False)
+        self.conv4 = MaskedConv2d(128, 256, kernel_size=self.ksize, stride=1, padding=1, bias=False)
         self.bn4_list = nn.ModuleList([nn.BatchNorm2d(256, eps=1e-4, momentum=0.1, affine=affine_flag) for i in range(self.batch_num)])
-        self.conv5 = nn.Conv2d(256, 256, kernel_size=self.ksize, stride=1, padding=1, bias=False)
+        self.conv5 = MaskedConv2d(256, 256, kernel_size=self.ksize, stride=1, padding=1, bias=False)
         self.bn5_list = nn.ModuleList([nn.BatchNorm2d(256, eps=1e-4, momentum=0.1, affine=affine_flag) for i in range(self.batch_num)])
-        self.conv6 = nn.Conv2d(256, 256, kernel_size=self.ksize, stride=1, padding=1, bias=False)
+        self.conv6 = MaskedConv2d(256, 256, kernel_size=self.ksize, stride=1, padding=1, bias=False)
         self.bn6_list = nn.ModuleList([nn.BatchNorm2d(256, eps=1e-4, momentum=0.1, affine=affine_flag) for i in range(self.batch_num)])
         self.pool3 = nn.AvgPool2d(kernel_size=2)
 
-        self.conv7 = nn.Conv2d(256, 512, kernel_size=self.ksize, stride=1, padding=1, bias=False)
+        self.conv7 = MaskedConv2d(256, 512, kernel_size=self.ksize, stride=1, padding=1, bias=False)
         self.bn7_list = nn.ModuleList([nn.BatchNorm2d(512, eps=1e-4, momentum=0.1, affine=affine_flag) for i in range(self.batch_num)])
-        self.conv8 = nn.Conv2d(512, 512, kernel_size=self.ksize, stride=1, padding=1, bias=False)
+        self.conv8 = MaskedConv2d(512, 512, kernel_size=self.ksize, stride=1, padding=1, bias=False)
         self.bn8_list = nn.ModuleList([nn.BatchNorm2d(512, eps=1e-4, momentum=0.1, affine=affine_flag) for i in range(self.batch_num)])
-        self.conv9 = nn.Conv2d(512, 512, kernel_size=self.ksize, stride=1, padding=1, bias=False)
+        self.conv9 = MaskedConv2d(512, 512, kernel_size=self.ksize, stride=1, padding=1, bias=False)
         self.bn9_list = nn.ModuleList([nn.BatchNorm2d(512, eps=1e-4, momentum=0.1, affine=affine_flag) for i in range(self.batch_num)])
         self.pool4 = nn.AvgPool2d(kernel_size=2)
 
-        self.conv10 = nn.Conv2d(512, 512, kernel_size=self.ksize, stride=1, padding=1, bias=False)
+        self.conv10 = MaskedConv2d(512, 512, kernel_size=self.ksize, stride=1, padding=1, bias=False)
         self.bn10_list = nn.ModuleList([nn.BatchNorm2d(512, eps=1e-4, momentum=0.1, affine=affine_flag) for i in range(self.batch_num)])
-        self.conv11 = nn.Conv2d(512, 512, kernel_size=self.ksize, stride=1, padding=1, bias=False)
+        self.conv11 = MaskedConv2d(512, 512, kernel_size=self.ksize, stride=1, padding=1, bias=False)
         self.bn11_list = nn.ModuleList([nn.BatchNorm2d(512, eps=1e-4, momentum=0.1, affine=affine_flag) for i in range(self.batch_num)])
-        self.conv12 = nn.Conv2d(512, 512, kernel_size=self.ksize, stride=1, padding=1, bias=False)
+        self.conv12 = MaskedConv2d(512, 512, kernel_size=self.ksize, stride=1, padding=1, bias=False)
         self.bn12_list = nn.ModuleList([nn.BatchNorm2d(512, eps=1e-4, momentum=0.1, affine=affine_flag) for i in range(self.batch_num)])
         self.pool5 = nn.AdaptiveAvgPool2d((1,1))
 
 
 
-        self.fc1 = nn.Linear(512, 4096, bias=False)
+        self.fc1 = MaskedLinear(512, 4096, bias=False)
         self.bnfc_list = nn.ModuleList([nn.BatchNorm1d( 4096, eps=1e-4, momentum=0.1, affine=affine_flag) for i in range(self.batch_num)])
 
-        self.fc2 = nn.Linear(4096, self.num_cls, bias=False)
+        self.fc2 = MaskedLinear(4096, self.num_cls, bias=False)
 
 
         batchnormlist = [self.bn1_list, self.bn1_1_list, self.bn2_list, self.bn3_list, self.bn4_list, self.bn5_list,
                          self.bn6_list, self.bn7_list,self.bn8_list,self.bn9_list,self.bn10_list, self.bn11_list,self.bn12_list, self.bnfc_list]
+
+        self.prunable_layers = [self.conv1, self.conv1_1, self.conv2, self.conv3, self.conv4, self.conv5, self.conv6,
+                                self.conv7, self.conv8, self.conv9, self.conv10, self.conv11, self.conv12, self.fc1,
+                                self.fc2]
 
         # TODO turn off bias of batchnorm
         for bnlist in batchnormlist:
@@ -634,6 +637,38 @@ class SNN_VGG16_TBN(nn.Module):
         # Instantiate differentiable spiking nonlinearity
         self.spike_fn = init_spike_fn(self.grad_type)
         self.spike_pool = init_spike_fn(self.grad_type_pool)
+
+    def prune_by_pct(self, pct_arg):
+        prunable_layers = self.prunable_layers
+        if isinstance(pct_arg, list) or isinstance(pct_arg, tuple):
+            assert len(prunable_layers) == len(pct_arg)
+        elif isinstance(pct_arg, float) or isinstance(pct_arg, int):
+            pct_arg = [pct_arg] * len(prunable_layers)
+        for pct, layer in zip(pct_arg, prunable_layers):
+            if pct is not None:
+                layer.prune_by_pct(pct)
+
+        print("Density after pruning")
+        for layer in self.prunable_layers:
+            print(layer, layer.num_weight/layer.mask.nelement())
+
+        return self
+
+    def random_prune_by_pct(self, pct_arg):
+        prunable_layers = self.prunable_layers
+        if isinstance(pct_arg, list) or isinstance(pct_arg, tuple):
+            assert len(prunable_layers) == len(pct_arg)
+        elif isinstance(pct_arg, float) or isinstance(pct_arg, int):
+            pct_arg = [pct_arg] * len(prunable_layers)
+        for pct, layer in zip(pct_arg, prunable_layers):
+            if pct is not None:
+                layer.random_prune_by_pct(pct)
+
+        print("Density after pruning")
+        for layer in self.prunable_layers:
+            print(layer, layer.num_weight / layer.mask.nelement())
+
+        return self
 
     def fc_init(self):
         torch.nn.init.xavier_uniform_(self.fc1.weight)

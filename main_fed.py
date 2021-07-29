@@ -147,9 +147,11 @@ if __name__ == '__main__':
     fl = FedLearn(args)
 
     if args.initial_prune is not None:
-        # prune_rates = [0.05, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.05]
-        prune_rates = [None, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, None]
-        if args.initial_prune == "frac":
+        if args.prune_input_output:
+            prune_rates = [0.05, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.05]
+        else:
+            prune_rates = [None, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, None]
+        if args.initial_prune == "magnitude":
             net_glob.module.prune_by_pct(prune_rates)
         elif args.initial_prune == "random":
             net_glob.module.random_prune_by_pct(prune_rates)
@@ -230,7 +232,10 @@ if __name__ == '__main__':
             print("Test loss", ms_loss_test_list)
 
         if args.prune:
-            prune_rates = [0.05, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.05]
+            if args.prune_input_output:
+                prune_rates = [0.05, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.05]
+            else:
+                prune_rates = [None, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, None]
             net_glob.module.prune_by_pct([x / 10 for x in prune_rates])
             print(f"Pruning {prune_rates[0]} at input/output layer and {prune_rates[1]} at other layers.")
 
