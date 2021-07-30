@@ -149,9 +149,9 @@ if __name__ == '__main__':
 
     if args.initial_prune is not None:
         if args.prune_input_output:
-            prune_rates = [0.05, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.05]
+            prune_rates = [0.05] + [0.1] * (len(net_glob.module.prunable_layers) - 2) + [0.05]
         else:
-            prune_rates = [None, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, None]
+            prune_rates = [None] + [0.1] * (len(net_glob.module.prunable_layers) - 2) + [None]
         if args.initial_prune == "magnitude":
             net_glob.module.prune_by_pct(prune_rates)
         elif args.initial_prune == "random":
@@ -234,10 +234,10 @@ if __name__ == '__main__':
 
         if args.prune:
             if args.prune_input_output:
-                prune_rates = [0.05, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.05]
+                prune_rates = [0.05] + [0.1] * (len(net_glob.module.prunable_layers) - 2) + [0.05]
             else:
-                prune_rates = [None, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, None]
-            net_glob.module.prune_by_pct([x / 10 for x in prune_rates])
+                prune_rates = [None] + [0.1] * (len(net_glob.module.prunable_layers) - 2) + [None]
+            net_glob.module.prune_by_pct([x if x is None else x / 10 for x in prune_rates])
             print(f"Pruning {prune_rates[0]} at input/output layer and {prune_rates[1]} at other layers.")
 
         if iter in lr_interval:
