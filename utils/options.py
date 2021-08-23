@@ -25,7 +25,7 @@ def args_parser():
     parser.add_argument('--alpha', default=0.3, type=float, help='parameter alpha for STDB')
     parser.add_argument('--beta', default=0.01, type=float, help='parameter beta for STDB')
     parser.add_argument('--snn_kernel_size', default=3, type=int, help='filter size for the conv layers')
-    parser.add_argument('--optimizer', default='Adam', type=str, help='optimizer for SNN backpropagation', choices=['SGD', 'Adam'])
+    parser.add_argument('--optimizer', default='Adam', type=str, help='optimizer for SNN backpropagation', choices=['SGD', 'Adam', 'GR']) # TODO: added GR
     parser.add_argument('--weight_decay', default=5e-4, type=float, help='weight decay parameter for the optimizer')
     parser.add_argument('--dropout', default=0.3, type=float, help='dropout percentage for conv layers')
 
@@ -61,7 +61,7 @@ def args_parser():
     parser.add_argument('--dvs', action='store_true', help="Whether the input data is DVS")
     parser.add_argument('--modality', type=str, default='aps', help="aps or dvs for the type of data to work on DDD20")
 
-    parser.add_argument('--prune', action='store_true', default=False, help='whether to use pruning or not')
+    parser.add_argument('--prune', action='store_true', default=False, help='whether to use pruning')
     parser.add_argument('--initial-prune', action='store', default=None, type=str, help='whether to do initial pruning', choices=["magnitude", "random"])
     parser.add_argument('--prune-input-output', action='store_true', default=False, help='whether to prune input/output layers')
     args = parser.parse_args()

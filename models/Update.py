@@ -11,6 +11,8 @@ from sklearn import metrics
 import sys
 import os
 
+from optimizer import GradRewiring
+
 
 class DatasetSplit(Dataset):
     def __init__(self, dataset, idxs):
@@ -37,6 +39,8 @@ class LocalUpdate(object):
             optimizer = torch.optim.SGD(net.parameters(), lr=self.args.lr, momentum=self.args.momentum, weight_decay = self.args.weight_decay)
         elif self.args.optimizer == "Adam":
             optimizer = torch.optim.Adam(net.parameters(), lr = self.args.lr, weight_decay = self.args.weight_decay, amsgrad = True)
+        elif self.args.optimizer == "GR":
+            optimizer = GradRewiring(net.parameters(), lr=self.args.lr, weight_decay=self.args.weight_decay, amsgrad=True)
         else:
             print("Invalid optimizer")
 
