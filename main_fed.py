@@ -84,8 +84,8 @@ if __name__ == '__main__':
                 model_args = {'num_cls': 1, 'timesteps': 20, 'inp_maps': 1, 'img_size': 40}
             else:
                 model_args = {'num_cls': args.num_classes, 'timesteps': 20}
-            # net_glob = snn_models_bntt.SNN_VGG9_TBN(**model_args).cuda()
-            net_glob = snn_models_bntt.SNN_VGG16_TBN(**model_args).cuda()
+            net_glob = snn_models_bntt.SNN_VGG9_TBN(**model_args).cuda()
+            # net_glob = snn_models_bntt.SNN_VGG16_TBN(**model_args).cuda()
         else:
             model_args = {'vgg_name': args.model, 'labels': args.num_classes, 'dataset': args.dataset, 'kernel_size': 3,
                           'dropout': args.dropout}
